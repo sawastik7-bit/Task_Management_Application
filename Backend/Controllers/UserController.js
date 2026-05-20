@@ -6,12 +6,9 @@
 // Also the id name convention inside the jwt sign token must be same as in authentication middleware .
 
 
-
-
 import User from '../Models/UserModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { useReducer } from 'react';
 import dotenv from 'dotenv';
 dotenv.config();
 const secret_key=process.env.JWT_SECRET;
@@ -47,6 +44,12 @@ return res.status(201).json({message:"User created successfully",user:user.name}
 export const loginUser=async(req,res)=>{
     try{
         const {email,password}=req.body;
+if(!email || !password){
+    return res.status(400).json({
+        message:"Email and password required"
+    });
+}
+
         const user=await User.findOne({email});
       
 if(!user){
