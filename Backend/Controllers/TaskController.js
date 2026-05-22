@@ -1,7 +1,7 @@
 import Task from "../Models/TaskModel.js";
-
-export const createTask=async(req,res)=>{
-    try{
+import asyncHandler from "../Middleware/asyncHandler.js";
+export const createTask= asyncHandler(async(req,res)=>{
+    
         const {title,description}=req.body;
         
         if(!title){
@@ -15,30 +15,31 @@ export const createTask=async(req,res)=>{
         });
         await task.save();
         return res.status(201).json({message:'Task create successfully',task});
-    }catch(error){
-        res.status(500).json({message:'server error',error:error.message});
-    }
-}
+    });
 
-export const getTask=async(req,res)=>{
-    try{
+export const getTask=asyncHandler(async(req,res)=>{
+    
+    const page=Number(req.query.page) ||1;
+    const limit=Number(req.query.limit)||5;
+
+    const skip=(page-1)*limit;
         
-        const tasks= await Task.find({author:req.userData.userId}).populate('author','name email') ;
+        const tasks= await Task.find({author:req.userData.userId}).populate('author','name email').sort({createdAt:-1}).skip(skip).limit(limit) ;
         if(!tasks.length){
             return res.status(404).json({
                 message:"No tasks found for this user"
             });
         }
-        return res.status(200).json(tasks);
-    }catch(err){
-         console.error('Error fetching tasks:', err);
-    return res.status(500).json({ error: 'Server error' });
-    }
-}
+        return res.status(200).json({
+            page,
+            limit,
+            count:tasks.length,
+            tasks});
+    })
 
 
-export const deleteTask=async(req,res)=>{
-    try{
+export const deleteTask=asyncHandler(async(req,res)=>{
+    
         const taskId=req.params.id;
         const task=await Task.findOneAndDelete({
             _id:taskId,
@@ -56,38 +57,29 @@ export const deleteTask=async(req,res)=>{
             message:"Task deleted successfully",
             task
         });
-    }catch (error) {
+    })
 
-        console.error(error);
-
-       return  res.status(500).json({
-            message: "Server Error and this is the task error"
-        });
-    }
-}
-
- export const updateTask=async(req,res)=>{
-    try{
+ export const updateTask=asyncHandler(async(req,res)=>{
+    
 
         const taskId=req.params.id;
         const {title,description}=req.body;
-
-        const updateData={};
+if(!title && !description)
+{
+    return res.status(400).json({
+        message:"Atleast one field is required"
+    });
+}        const updateData={};
         if(title) updateData.title=title;
-        if(description) update.Data.description=description;
-
-if(!taskId){
-   return  res.status(404).json("Task not found");
-
-}
+        if(description) updateData.description=description;
     const updatedTask = await Task.findOneAndUpdate(
             {
-                _id:id,
+                _id:taskId,
                 author:req.userData.userId
             },
-            {
+            
                updateData
-            },
+            ,
             {
                 new:true,
                 runValidators:true
@@ -104,8 +96,4 @@ if(!taskId){
             message:"Task updated successfully",
             task:updatedTask
         });
-    }catch(err){
-        console.log(err);
-        res.status(500).json(err);
-    }
-}
+    })

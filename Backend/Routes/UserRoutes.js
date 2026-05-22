@@ -1,13 +1,17 @@
 import express from 'express';
+import {body} from 'express-validator'
+import { authMiddleware,refreshTokenHandler } from '../Middleware/AuthMiddleware.js';
+import {createUser,loginUser,logoutUser} from '../Controllers/UserController.js';
+import { registerTaskValidator,loginTaskValidator } from '../validators/taskValidator.js';
 
-import { authMiddleware } from '../Middleware/AuthMiddleware.js';
-import {createUser,loginUser} from '../Controllers/UserController.js';
 
 const UserRouter=express.Router();
 UserRouter.get('/',(req,res)=>{
     res.send("Welcome to Task Management Application API");
 });
-UserRouter.post('/register',createUser);
-UserRouter.post('/login',loginUser);
+UserRouter.post('/register',registerTaskValidator,createUser);
+UserRouter.post('/login',loginTaskValidator,loginUser);
+UserRouter.post('/refresh-token',refreshTokenHandler);
+UserRouter.post('/logout',logoutUser);
 
 export default UserRouter;

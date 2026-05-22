@@ -10,9 +10,19 @@ import User from '../Models/UserModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { validationResult } from 'express-validator';
 dotenv.config();
 const secret_key=process.env.JWT_SECRET;
+ 
+
 export const createUser=async(req,res)=>{ 
+
+      const errors=validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({
+                errors:errors.array()
+            });
+        }
     try{
         const {name,email,password}=req.body;
         if(!name || !email || !password){
@@ -32,6 +42,7 @@ const hashedPassword=await bcrypt.hash(password,10);
             email,
             password:hashedPassword
         });
+      
 
 return res.status(201).json({message:"User created successfully",user:user.name});
     }catch(error){
@@ -42,6 +53,15 @@ return res.status(201).json({message:"User created successfully",user:user.name}
 
 
 export const loginUser=async(req,res)=>{
+
+     const errors=validationResult(req);
+        if(!errors.isEmpty()){
+            return res.status(400).json({
+                errors:errors.array()
+            });
+        }
+
+
     try{
         const {email,password}=req.body;
 if(!email || !password){
@@ -57,7 +77,7 @@ if(!user){
 
 }
 const passwordMatch=await bcrypt.compare(password,user.password);
-console.log(passwordMatch);
+
 if(!passwordMatch){
     return res.status(401).json({error:"Authentication failed , try again"});
 }
@@ -67,14 +87,48 @@ const payload={
 
 
 };
-const token=jwt.sign(payload,secret_key,{expiresIn:'1d'});
-res.json({
-    message:'Login successful',
-    token
+const token=jwt.sign(payload,secret_key,{expiresIn:'15m'});
+
+
+const refreshToken=jwt.sign(
+    {id:user._id},process.env.REFRESH_TOKEN_SECRET,
+{expiresIn:'7d'});
+
+res.cookie("refreshToken",refreshToken,{
+    httpOnly:true,
+    secure:false,
+    sameSite:"strict",
+    maxAge:7*24*60*60*1000
 });
+res.status(200).json({
+    message:"login successfull",
+    token
+})
 
 
     }catch(error){
         res.status(500).json({error:"Server error"});
     }
 }
+
+export const logoutUser=(req,res)=>{
+ try {
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict"
+        });
+
+        return res.status(200).json({
+            message: "Logged out successfully"
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: "Server error"
+        });
+    }
+};
+
+
+
