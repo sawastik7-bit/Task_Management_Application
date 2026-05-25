@@ -102,7 +102,11 @@ res.cookie("refreshToken",refreshToken,{
 });
 res.status(200).json({
     message:"login successfull",
-    token
+    token,
+    user:{
+        name:user.name,
+        email:user.email,
+    }
 })
 
 
