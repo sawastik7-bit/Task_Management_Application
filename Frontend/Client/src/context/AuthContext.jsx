@@ -5,7 +5,6 @@ export const AuthContext=createContext();
 const AuthProvider=({children})=>{
     const [client,setClient]=useState(null);
     const [accessToken,setAccessToken]=useState(null);
-
     const login=(userData,token)=>{
         setClient(userData);
         setAccessToken(token);

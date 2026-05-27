@@ -6,7 +6,7 @@ import { LoginApi } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 const Login = () => {
 
-// const navigate=useNavigate();
+const navigate=useNavigate();
 
 
   const [loginEmail,setLoginEmail]=useState('');
@@ -46,7 +46,7 @@ try{
 
  
   
-// navigate("/dashboard")
+navigate("/dashboard");
 
 
 
@@ -64,8 +64,8 @@ try{
         <p>Hey enter your details to sign in your account</p>
         <input type="email" placeholder='Email' value={loginEmail}  onChange={(e)=> setLoginEmail(e.target.value)}/>
         <input type="password"  placeholder='Password' value={loginPassword}  onChange={(e)=>setLoginPassword(e.target.value)}/>
-        <button onClick={handleLogin}>Login In</button>
-        <p>Don't have an account ?<Link to ="/register">Sign up</Link></p>
+        <button onClick={handleLogin}>Log In</button>
+        <p>Don't have an account ? <Link to ="/register">Sign up</Link></p>
       </div>
       
     </div>
