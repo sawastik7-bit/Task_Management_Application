@@ -16,23 +16,6 @@ export const createTaskValidator = [
     .withMessage("Description must be at least 5 characters")
 ];
 
-export const updateTaskValidator = [
-  param("id")
-    .isMongoId()
-    .withMessage("Invalid Task ID"),
-
-  body("title")
-    .optional()
-    .trim()
-    .isLength({ min: 3 })
-    .withMessage("Title must be at least 3 characters"),
-
-  body("description")
-    .optional()
-    .trim()
-    .isLength({ min: 5 })
-    .withMessage("Description must be at least 5 characters")
-];
 
 export const deleteTaskValidator = [
   param("id")

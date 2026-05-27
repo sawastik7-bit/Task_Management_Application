@@ -1,12 +1,29 @@
-import React from 'react'
-import { AuthContext } from '../context/AuthContext'
+
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { LogoutApi } from '../services/api';
 
 const Navbar = () => {
   const navigate=useNavigate();
 const storedAuth=JSON.parse(localStorage.getItem("auth"));
-const handleLogout=()=>{
-  navigate("/");
+const handleLogout=async()=>{
+  try{
+    const response=await axios.post(LogoutApi,{},{
+      withCredentials:true
+    });
+    if(!response){
+      alert(response.data.message);
+      return;
+    }
+   localStorage.removeItem(
+      "auth"
+    );
+    alert("logout successfull");
+    navigate("/");
+  }catch(error){
+    alert(error.response?.data?.message || "logout failed");
+  }
+  
 }
 
 

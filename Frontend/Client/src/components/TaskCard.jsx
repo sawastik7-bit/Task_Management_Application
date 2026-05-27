@@ -39,18 +39,14 @@ const TaskCard = () => {
 
 }, []);
 
-  return (
-    <div className='task-container'>
-        <div className="task-input-wrapper">
-        <TaskInput title={title} setTitle={setTitle} description={description} setDescription={setDescription} tasks={tasks}  setTasks={setTasks}/>
-      </div>
-      
-      <div className='task-list-container'>
-         <TaskList  tasks={tasks}  setTasks={setTasks}/>
-      </div>
-     
-    </div>
-  )
+  
+   return (
+  <div className='task-container'>
+    <TaskInput title={title} setTitle={setTitle} description={description} setDescription={setDescription} tasks={tasks} setTasks={setTasks}/>
+    <TaskList tasks={tasks} setTasks={setTasks}/>
+  </div>
+)
+  
 }
 
 export default TaskCard

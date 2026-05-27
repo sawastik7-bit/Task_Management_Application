@@ -9,7 +9,8 @@ const Register = () => {
 
   const navigate=useNavigate();
 
-  const handleRegister=async()=>{
+  const handleRegister=async(e)=>{
+    e.preventDefault();
 try{
   if(!name || !email || !password){
     alert("please enter all of the fields");
@@ -31,26 +32,71 @@ navigate('/login');
   }
     
   return (
-    <div className='parent'>
-      <div className='login-container'>
-        <div className='image-container'>
-            <img src="https://img.freepik.com/premium-photo/art-japan-background_839182-17143.jpg" alt="" />
-        </div>
-        <div className='details-container'>
-            <div className='title'><img src="" alt="" />
-            <h1>Task Hub</h1>
-            </div>
-            <h2>Welcome to Task Hub! <br /><p>please sign-in and start the adventure</p></h2>
-            <input type="text" placeholder='Name' value={name} onChange={(e) =>{setName(e.target.value) }}/>
-            
-            <input type="email" name="" placeholder='Email' value={email} onChange={(e) =>setEmail(e.target.value)}/>
-            <input type="password" name="" placeholder='Password' value={password} onChange={(e) =>setPassword(e.target.value)}/>
-            <button onClick={()=>{
-              handleRegister();
-            }}>Sign up</button>
-        </div> 
+   <div className='parent'>
+  <div className='login-container'>
+
+    <form
+      className='details-container'
+      onSubmit={handleRegister}
+    >
+
+      <div className='title'>
+        <img src="" alt="" />
+        <h1>Task Hub</h1>
       </div>
-    </div>
+
+      <h2>
+        Welcome to Task Hub!
+      </h2>
+
+      <p>
+        please sign-in and start
+        the adventure
+      </p>
+
+      <input
+        type="text"
+        placeholder='Name'
+        value={name}
+        onChange={(e)=>
+          setName(e.target.value)
+        }
+      />
+
+      <input
+        type="email"
+        placeholder='Email'
+        value={email}
+        onChange={(e)=>
+          setEmail(e.target.value)
+        }
+      />
+
+      <input
+        type="password"
+        placeholder='Password'
+        value={password}
+        onChange={(e)=>
+          setPassword(e.target.value)
+        }
+      />
+
+      <button type="submit">
+        Sign up
+      </button>
+
+      <p>
+        Already have an account
+
+        <Link to="/login">
+          Login
+        </Link>
+      </p>
+
+    </form>
+
+  </div>
+</div>
   )
 }
 

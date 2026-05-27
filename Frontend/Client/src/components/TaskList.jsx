@@ -32,19 +32,31 @@ alert("task deleted successfully");
   alert(error.response?.data?.message || "server error");
 }return;
   }
-  return (
-    <div className="task-list-container">
-      {tasks.map((task) => (
-        <SingleTaskCard
-          key={task._id}
-          taskId={task._id}
-          title={task.title}
-          description={task.description}
-          handleDelete={handleDelete}
-        />
-      ))}
-    </div>
-  );
+ return (
+  <div className="task-list-container">
+
+    {
+      tasks.length === 0 ? (
+
+        <h2>No Tasks Found</h2>
+
+      ) : (
+
+        tasks.map((task) => (
+          <SingleTaskCard
+            key={task._id}
+            taskId={task._id}
+            title={task.title}
+            description={task.description}
+            handleDelete={handleDelete}
+          />
+        ))
+
+      )
+    }
+
+  </div>
+);
 };
 
 export default TaskList;
